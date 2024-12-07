@@ -1,27 +1,36 @@
 #!/bin/bash
 
-# Check if an argument is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <ex1|ex2|ex3|ex4|ex5>"
+  echo "Usage: $0 <ex1|ex2|ex3|ex4> [additional parameters]"
   exit 1
 fi
 
-# Set the executable to run
-EXECUTABLE=$1
 
-# Modify CMakeLists.txt
+EXECUTABLE=$1
+shift 
+ADDITIONAL_PARAMS="$@"
+
+if [[ ! "$EXECUTABLE" =~ ^ex[0-9]+$ ]]; then
+  echo "Error: Invalid executable name. Use ex1, ex2, ex3, or ex4."
+  exit 1
+fi
+
 sed -i.bak "s|src/ex[0-9]/ex[0-9]_main.cpp|src/$EXECUTABLE/${EXECUTABLE}_main.cpp|g" CMakeLists.txt
 sed -i "s|src/ex[0-9]/ex[0-9]_raster.h|src/$EXECUTABLE/${EXECUTABLE}_raster.h|g" CMakeLists.txt
 sed -i "s|src/ex[0-9]/ex[0-9]_raster.cpp|src/$EXECUTABLE/${EXECUTABLE}_raster.cpp|g" CMakeLists.txt
 
-# Remove and recreate the build directory
 rm -rf build
 mkdir build
 cd build
 
-# Run cmake and make
-cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+
+cmake -DCMAKE_BUILD_TYPE=RELEASE ..
 make
 
-# Execute the binary with the specified data file
-./assignment4 ../data/bunny_ex2.json v
+DATA_FILE="../data/bunny_${EXECUTABLE}.json"
+if [ ! -f "$DATA_FILE" ]; then
+  echo "Error: Data file $DATA_FILE not found!"
+  exit 1
+fi
+
+./assignment4 "$DATA_FILE" $ADDITIONAL_PARAMS

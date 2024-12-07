@@ -6,3 +6,17 @@ the file is named "Report.pdf" and is located in the Report Folder
 To build and run it follow the instruction follow the instruction inside the Report 
 which correspond to more general solution of a set of istruction to be performed one after another 
 depending on the exercise that we want to execute 
+
+
+To compile use 
+
+./run.sh [EXERCISE] [ADDITIONAL_PARAMETER]
+
+
+Example of execution :
+
+./run.sh ex1 
+
+./run.sh ex2 f
+
+./run.sh ex2 v

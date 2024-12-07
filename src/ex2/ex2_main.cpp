@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 		////////////// ILLUMINATION EQUATION ////////////////////////////
 		// All trasformation must be done in Vertex Shader , NOT POSSIBLE 
 		// Note that for the shading to be correct, the lighting equation need to 
-		//be computed in the camera space (sometimes called the eye space). 
+		// be computed in the camera space (sometimes called the eye space). 
 		
 		// Material of the object
 		UniformAttributes::Material mat = uniform.materials[uniform.object_material_index];  
@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
 		Vector4f point_normal ;
 		
 		if(shadingMode == FLAT_SHADING  || shadingMode == PER_VERTEX_SHADING ){
-
 
 			// Every point need to be in Camera Space in which the origin is the camera
 
@@ -443,13 +442,13 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 				rasterize_lines(program,uniform,vertex_attributes_wire,thickness,frameBuffer);
 			
 			}else{
-				// TODO : 
+				// Per Vertex 
 				float thickness =  1.0;
 				rasterize_triangles(program,uniform,vertex_attributes_per_vertex,frameBuffer);
 			}
 
 		}else{
-			// TODO
+			// TODO : Manage other Type of Object 
 		}
 	}
 	
