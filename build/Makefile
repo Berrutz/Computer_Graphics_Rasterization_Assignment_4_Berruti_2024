@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024
+CMAKE_SOURCE_DIR = /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/build
+CMAKE_BINARY_DIR = /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/build/CMakeFiles /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/CMakeFiles /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,53 +129,53 @@ assignment4/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/build
 .PHONY : assignment4/fast
 
-src/ex2/ex2_main.o: src/ex2/ex2_main.cpp.o
-.PHONY : src/ex2/ex2_main.o
+src/ex4/ex4_main.o: src/ex4/ex4_main.cpp.o
+.PHONY : src/ex4/ex4_main.o
 
 # target to build an object file
-src/ex2/ex2_main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.o
-.PHONY : src/ex2/ex2_main.cpp.o
+src/ex4/ex4_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o
+.PHONY : src/ex4/ex4_main.cpp.o
 
-src/ex2/ex2_main.i: src/ex2/ex2_main.cpp.i
-.PHONY : src/ex2/ex2_main.i
+src/ex4/ex4_main.i: src/ex4/ex4_main.cpp.i
+.PHONY : src/ex4/ex4_main.i
 
 # target to preprocess a source file
-src/ex2/ex2_main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.i
-.PHONY : src/ex2/ex2_main.cpp.i
+src/ex4/ex4_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.i
+.PHONY : src/ex4/ex4_main.cpp.i
 
-src/ex2/ex2_main.s: src/ex2/ex2_main.cpp.s
-.PHONY : src/ex2/ex2_main.s
+src/ex4/ex4_main.s: src/ex4/ex4_main.cpp.s
+.PHONY : src/ex4/ex4_main.s
 
 # target to generate assembly for a file
-src/ex2/ex2_main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.s
-.PHONY : src/ex2/ex2_main.cpp.s
+src/ex4/ex4_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.s
+.PHONY : src/ex4/ex4_main.cpp.s
 
-src/ex2/ex2_raster.o: src/ex2/ex2_raster.cpp.o
-.PHONY : src/ex2/ex2_raster.o
+src/ex4/ex4_raster.o: src/ex4/ex4_raster.cpp.o
+.PHONY : src/ex4/ex4_raster.o
 
 # target to build an object file
-src/ex2/ex2_raster.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.o
-.PHONY : src/ex2/ex2_raster.cpp.o
+src/ex4/ex4_raster.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o
+.PHONY : src/ex4/ex4_raster.cpp.o
 
-src/ex2/ex2_raster.i: src/ex2/ex2_raster.cpp.i
-.PHONY : src/ex2/ex2_raster.i
+src/ex4/ex4_raster.i: src/ex4/ex4_raster.cpp.i
+.PHONY : src/ex4/ex4_raster.i
 
 # target to preprocess a source file
-src/ex2/ex2_raster.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.i
-.PHONY : src/ex2/ex2_raster.cpp.i
+src/ex4/ex4_raster.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.i
+.PHONY : src/ex4/ex4_raster.cpp.i
 
-src/ex2/ex2_raster.s: src/ex2/ex2_raster.cpp.s
-.PHONY : src/ex2/ex2_raster.s
+src/ex4/ex4_raster.s: src/ex4/ex4_raster.cpp.s
+.PHONY : src/ex4/ex4_raster.s
 
 # target to generate assembly for a file
-src/ex2/ex2_raster.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.s
-.PHONY : src/ex2/ex2_raster.cpp.s
+src/ex4/ex4_raster.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment4.dir/build.make CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.s
+.PHONY : src/ex4/ex4_raster.cpp.s
 
 # Help Target
 help:
@@ -186,12 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... assignment4"
-	@echo "... src/ex2/ex2_main.o"
-	@echo "... src/ex2/ex2_main.i"
-	@echo "... src/ex2/ex2_main.s"
-	@echo "... src/ex2/ex2_raster.o"
-	@echo "... src/ex2/ex2_raster.i"
-	@echo "... src/ex2/ex2_raster.s"
+	@echo "... src/ex4/ex4_main.o"
+	@echo "... src/ex4/ex4_main.i"
+	@echo "... src/ex4/ex4_main.s"
+	@echo "... src/ex4/ex4_raster.o"
+	@echo "... src/ex4/ex4_raster.i"
+	@echo "... src/ex4/ex4_raster.s"
 .PHONY : help
 
 

@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.o"
-  "CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.o.d"
-  "CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.o"
-  "CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.o.d"
+  "CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o"
+  "CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o.d"
+  "CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o"
+  "CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o.d"
   "assignment4"
   "assignment4.pdb"
 )

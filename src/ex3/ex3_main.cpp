@@ -73,12 +73,66 @@ ShadingMode shadingMode = WIREFRAME; 										// Default shading mode
 
 // Animation Parameters
 const int num_frames = 25; 					// Number of frames
-const float animation_speed = 0.1; 			// Animation speed
+const float animation_speed = 0.1; 			// Rotation speed around it's barycenter on a specificied axis 
+const float translation_speed_toward_camera = -0.05; // Translation speed to move the object toward the camera 
 
 // Name of the gif
 GifWriter g;
 
 ////////////////////////////////////////////////////////////////////
+
+
+/////////////////// ROTATION AROUND BARICENTER /////////////////////////
+
+
+Matrix4f compute_rotation_around_center(const Vector3f& center, float frame, float rotation_speed_along_axis,float translation_speed_toward_camera, const Matrix4f& model_matrix) {
+    
+	// Matrix to traslate to the center of the object (barycenter) and turn back 
+    Matrix4f translate_to_center = create_translation_matrix(-center);
+    Matrix4f translate_back_to_point = create_translation_matrix(center);
+
+    // Rotation along z axis depending on the frame 
+    float theta = frame * rotation_speed_along_axis;
+    Matrix4f rotation_on_z_axis = create_rotation_matrix_z(theta);
+
+    // Apply Transformation
+    Matrix4f RotateAroundBaricenter = translate_back_to_point * rotation_on_z_axis * translate_to_center;
+
+    // Move towards the camera 
+    //float translation_speed = -0.05;
+	float translation_speed = translation_speed_toward_camera;
+    Vector3f trans = Vector3f(0, 0, frame * translation_speed);
+    Matrix4f translation_towards_camera = create_translation_matrix(trans);
+
+    // Combine with matrix of the model 
+    return translation_towards_camera * model_matrix * RotateAroundBaricenter;
+}
+
+
+///////////////////////////// COMPUTE TRANSFORMATION OF NORMAL ////////////////////////////////
+
+Vector4f compute_transformed_normal(const Vector4f& input_normal, 
+                                    const Matrix4f& model_transform, 
+                                    const Matrix4f& camera_matrix) {
+
+	// Compute Matrix of transforming normal (transpose of the inverse )
+    Matrix4f normal_transform = model_transform.inverse().transpose();
+
+    // Trasform the normale 
+    Vector4f transformed_normal = normal_transform * input_normal;
+	// Normal are vector not point 
+    transformed_normal[3] = 0.0; 
+
+    // Transfrom in camera space 
+	// Ortogonal rotation correspond to the inverse 
+    Matrix3f camera_normal_transform = camera_matrix.block<3, 3>(0, 0).transpose(); 
+    Vector3f normal_in_camera_space = (camera_normal_transform * transformed_normal.head<3>()).normalized();
+
+    // Convert in 4d vector to pass it 
+    return Vector4f(normal_in_camera_space[0], normal_in_camera_space[1], normal_in_camera_space[2], 0.0);
+}
+
+/////////////////////////////////////////////////////////////////////
 
 
 
@@ -129,7 +183,6 @@ int main(int argc, char *argv[])
 	frameBuffer(width,height);  
 	GifBegin(&g, fileName,frameBuffer.rows(), frameBuffer.cols(), delay);
 	
-	float rotation_on_x_frame = 0;
 
 	/*************************/
 
@@ -151,23 +204,17 @@ int main(int argc, char *argv[])
 			Vector4f CameraTransformedPosition;
 			Vector4f ProjectionTransformedPosition;
 
-			// ROTATE ROTATION MATRIX BASED ON FRAMES AND ROTATION SPEED AROUND BARICENTER
-			Vector3f center = uniform.center_of_the_model;
-
-			Matrix4f translate_to_center = create_translation_matrix(-center);
-			Matrix4f translate_back_to_point = create_translation_matrix(center);
-			double theta = uniform.frame * uniform.speed;
-			Matrix4f rotation_on_z_frame = create_rotation_matrix_z(theta);
-
-			float translation_speed = -0.05;
-			Vector3f trans = Vector3f(0,0, uniform.frame * translation_speed );
-			Matrix4f translation_towards_camera = create_translation_matrix(trans);
-
-			// MODELLING TRASFORMATION
-			Matrix4f model = uniform.model_matrix;
-			Matrix4f Rotate_around_baricenter = translate_back_to_point * rotation_on_z_frame * translate_to_center;
-			ModelTransformedPosition = translation_towards_camera * model * Rotate_around_baricenter * va.position;
-
+			// Rotate around barycenter of the object 
+			Matrix4f FinalRotateModel = compute_rotation_around_center(
+				uniform.center_of_the_model, 
+				uniform.frame, 
+				uniform.rotation_speed_along_axis, 
+				uniform.translation_speed_toward_camera,
+				uniform.model_matrix
+			);
+			
+			ModelTransformedPosition = FinalRotateModel * va.position;
+			
 			// CAMERA TRASFORMATION
 			Matrix4f camera = uniform.camera_matrix;
 			CameraTransformedPosition = camera * ModelTransformedPosition;
@@ -181,14 +228,16 @@ int main(int argc, char *argv[])
 			float tolerance = 1e-6;
 			assert( (aux - CameraTransformedPosition).norm() < tolerance && "ERROR in Inverse");
 
-			Vector4f FinalNormal;
-			if(shadingMode == PER_VERTEX_SHADING){
-					FinalNormal = va.vertex_normal;   					
-					out.vertex_normal  = FinalNormal;
-			}else{
-					FinalNormal = va.face_normal; 
-					out.face_normal  = FinalNormal;
-			} 
+			/* COMPUTE TRANSFORMED NORMAL */
+			if (shadingMode == PER_VERTEX_SHADING) {
+
+				out.vertex_normal = compute_transformed_normal(va.vertex_normal, FinalRotateModel, camera);
+			
+			} else { // FLAT_SHADING and WIREFRAME 
+
+				out.face_normal = compute_transformed_normal(va.face_normal, FinalRotateModel, camera);
+			
+			}
 
 			Vector4f FinalPosition = ProjectionTransformedPosition;  // Transformed in Projection System
 			out.position = FinalPosition;
@@ -309,9 +358,8 @@ int main(int argc, char *argv[])
 		frameBuffer(width,height);  
 
 		uniform.frame = frame;
-		uniform.speed = animation_speed;
-		rotation_on_x_frame = frame * animation_speed;
-		uniform.rotation_on_x_frame = rotation_on_x_frame;
+		uniform.rotation_speed_along_axis = animation_speed;
+		uniform.translation_speed_toward_camera = translation_speed_toward_camera;
 
 		load_scene(argv[1],program,uniform,frameBuffer);
 
@@ -372,16 +420,15 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 	uniform.camera_matrix = create_camera_matrix( uniform.camera.position , Target , UpVector );
 	uniform.camera_matrix_inv_transpose = uniform.camera_matrix.inverse().transpose();  // ok 
 
-	std::cout << "Camera Matrix " << std::endl;
-	std::cout << uniform.camera_matrix << std::endl;
+	/*std::cout << "Camera Matrix " << std::endl;
+	std::cout << uniform.camera_matrix << std::endl;*/
 
 
 	float h = frameBuffer.cols();
 	float w = frameBuffer.rows();   
 	float aspectRatio = float(h) / float(w);  	 	 
 
-	std::cout << " w = " << w << 
-	" | h = " << h << " | aspectRatio = " << 1/aspectRatio << std::endl; 
+	/*std::cout << " w = " << w << " | h = " << h << " | aspectRatio = " << 1/aspectRatio << std::endl; */
 	
 
 	// Compute the Projection Matrix ( Ortographic or Perspective )
@@ -401,7 +448,7 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 		uniform.projection_matrix_inverse = uniform.projection_matrix.inverse();
 		uniform.projection_matrix_inv_transpose = uniform.projection_matrix_inverse.transpose();
 
-		std::cout << "PROJECTION MATRIX ORTOGRAPHIC: \n" << uniform.projection_matrix << std::endl;
+		//std::cout << "PROJECTION MATRIX ORTOGRAPHIC: \n" << uniform.projection_matrix << std::endl;
 		
 	}
 
@@ -437,7 +484,7 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 
 			// Retrive name of the .off file
 			std::string filename_off = std::string(DATA_DIR) + entry["Path"].get<std::string>();
-			std::cout << filename_off << std::endl;
+			//std::cout << "Location of the .off file : " << filename_off << std::endl;
 
 			MatrixXf vertices;                  
 			MatrixXi facets;
@@ -455,8 +502,8 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 			uniform.model_matrix = create_model_matrix(translation, angle_x , angle_y , angle_z , scale_factors);
 			uniform.model_matrix_inv_transpose = uniform.model_matrix.inverse().transpose();
 
-			std::cout << "Model Matrix " << std::endl;
-			std::cout << uniform.model_matrix << std::endl;
+			/*std::cout << "Model Matrix " << std::endl;
+			std::cout << uniform.model_matrix << std::endl;*/
 			
 
 			// change color to rasterize based on the specific color of the Mesh 
@@ -740,7 +787,7 @@ Matrix4f create_camera_matrix(Vector3f& eye,  Vector3f& target,  Vector3f& up) {
 	u = w.cross(up).normalized();      // x axis camera
 	v = u.cross(w);				       // y axis camera  
 
-	std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
+	//std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
 
 	Matrix3f R;
     R.col(0) << u.x(), u.y(), u.z();
@@ -786,8 +833,8 @@ Matrix4f ortographic_matrix(Vector3f top_right_corner,float near , float far, fl
 	b = - t;
 	l = - r;
 
-	std::cout << "ORTO : r = " << r << " | t = " << t << " | f = " << f
-	<< " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
+	/*std::cout << "ORTO : r = " << r << " | t = " << t << " | f = " << f
+	<< " | b = " << b << " | l = " << l << " | n = " << n << std::endl;*/
 	
 
 	// slide 12 page 2
@@ -832,7 +879,7 @@ Matrix4f perspective_matrix(float near , float focal_lenght, float theta,float a
 	b = - std::tan(theta / 2.0) * std::abs(n); 
 	l = b ;
 
-	std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
+	//std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
 	
 
 	// slide 12 page 2

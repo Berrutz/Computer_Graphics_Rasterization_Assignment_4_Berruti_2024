@@ -82,8 +82,8 @@ class UniformAttributes
 
 	// new 
 	int frame;
-	float speed;
-	float rotation_on_x_frame;
+	float rotation_speed_along_axis;
+	float translation_speed_toward_camera;
 	Vector3f center_of_the_model;
 
 	int object_material_index;

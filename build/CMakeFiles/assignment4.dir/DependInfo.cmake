@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/src/ex2/ex2_main.cpp" "CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.o" "gcc" "CMakeFiles/assignment4.dir/src/ex2/ex2_main.cpp.o.d"
-  "/home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/src/ex2/ex2_raster.cpp" "CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.o" "gcc" "CMakeFiles/assignment4.dir/src/ex2/ex2_raster.cpp.o.d"
+  "/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/src/ex4/ex4_main.cpp" "CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o" "gcc" "CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o.d"
+  "/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/src/ex4/ex4_raster.cpp" "CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o" "gcc" "CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

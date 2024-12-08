@@ -3,9 +3,9 @@ project(assignment4)
 
 # Project sources
 add_executable("assignment4"
-	src/ex2/ex2_main.cpp
-	src/ex2/ex2_raster.h
-	src/ex2/ex2_raster.cpp
+	src/ex4/ex4_main.cpp
+	src/ex4/ex4_raster.h
+	src/ex4/ex4_raster.cpp
 )
 
 # Include Eigen for linear algebra

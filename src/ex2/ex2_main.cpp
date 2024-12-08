@@ -71,6 +71,28 @@ void compute_per_vertex_normals(const MatrixXf &vertices, const MatrixXi &facets
 enum ShadingMode { WIREFRAME, FLAT_SHADING, PER_VERTEX_SHADING };
 ShadingMode shadingMode = WIREFRAME; 										// Default shading mode
 
+///////////////////////////// COMPUTE TRANSFORMATION OF NORMAL ////////////////////////////////
+
+Vector4f compute_transformed_normal(const Vector4f& input_normal, 
+                                    const Matrix4f& model_transform, 
+                                    const Matrix4f& camera_matrix) {
+
+	// Compute Matrix of transforming normal (transpose of the inverse )
+    Matrix4f normal_transform = model_transform.inverse().transpose();
+
+    // Trasform the normale 
+    Vector4f transformed_normal = normal_transform * input_normal;
+	// Normal are vector not point 
+    transformed_normal[3] = 0.0; 
+
+    // Transfrom in camera space 
+	// Ortogonal rotation correspond to the inverse 
+    Matrix3f camera_normal_transform = camera_matrix.block<3, 3>(0, 0).transpose(); 
+    Vector3f normal_in_camera_space = (camera_normal_transform * transformed_normal.head<3>()).normalized();
+
+    // Convert in 4d vector to pass it 
+    return Vector4f(normal_in_camera_space[0], normal_in_camera_space[1], normal_in_camera_space[2], 0.0);
+}
 
 int main(int argc, char *argv[]) 
 {
@@ -114,15 +136,16 @@ int main(int argc, char *argv[])
 		float tolerance = 1e-6;
 		assert( (aux - CameraTransformedPosition).norm() < tolerance && "ERROR in Inverse");
 		
-		Vector4f FinalNormal;
-		if(shadingMode == PER_VERTEX_SHADING){
-				FinalNormal = va.vertex_normal;   			
-				out.vertex_normal  = FinalNormal;
-		}else{
-			    FinalNormal = va.face_normal; 
-				out.face_normal  = FinalNormal;
+		/* COMPUTE TRANSFORMED NORMAL */
+		if (shadingMode == PER_VERTEX_SHADING) {
 
-		} 
+			out.vertex_normal = compute_transformed_normal(va.vertex_normal, model, camera);
+		
+		} else { // FLAT_SHADING and WIREFRAME 
+		
+			out.face_normal = compute_transformed_normal(va.face_normal, model, camera);
+		
+		}
 
 		Vector4f FinalPosition = ProjectionTransformedPosition;  // Transformed in Projection System
 		out.position = FinalPosition;
@@ -337,10 +360,7 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 	float w = frameBuffer.rows();   
 	float aspectRatio = float(h) / float(w);  	 	 
 
-	std::cout 
-	<< " w = " << w 
-	<< " | h = " << h 
-	<< " | aspectRatio = " << 1 / aspectRatio << std::endl; 
+	//std::cout << " w = " << w << " | h = " << h << " | aspectRatio = " << 1 / aspectRatio << std::endl; 
 
 	// Compute the Projection Matrix ( Ortographic or Perspective )
 	if (uniform.camera.is_perspective){
@@ -391,7 +411,7 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 		if (entry["Type"] == "Mesh") {
 
 			std::string filename_off = std::string(DATA_DIR) + entry["Path"].get<std::string>();
-			std::cout << filename_off << std::endl;
+			std::cout << "Location of the .off file : " << filename_off << std::endl;
 
 			MatrixXf vertices;                  
 			MatrixXi facets;
@@ -490,8 +510,9 @@ void load_off(const std::string &filename, vector<VertexAttributes> &vertex_attr
 	// Check Range of values of the 3D Model in Model Coordinate system
 	Vector3f min_values = Vertices.colwise().minCoeff();
 	Vector3f max_values = Vertices.colwise().maxCoeff();
-	std::cout << "Min values: " << min_values.transpose() << std::endl; 
-	std::cout << "Max values: " << max_values.transpose() << std::endl; 
+	
+	/*std::cout << "Min values: " << min_values.transpose() << std::endl; 
+	std::cout << "Max values: " << max_values.transpose() << std::endl;*/
 
 	// Face and Per Vertex Normal
 	MatrixXf Face_normals;
@@ -701,7 +722,7 @@ Matrix4f create_camera_matrix(Vector3f& eye,  Vector3f& target,  Vector3f& up) {
 	u = w.cross(up).normalized();      // x axis camera
 	v = u.cross(w);				       // y axis camera
 
-	std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
+	//std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
 
 	Matrix3f R;
     R.col(0) << u.x(), u.y(), u.z();
@@ -793,7 +814,7 @@ Matrix4f perspective_matrix(float near , float focal_lenght, float theta,float a
 	b = - std::tan(theta / 2.0) * std::abs(n); 
 	l = b ;
 
-	std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
+	//std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
 
 	// slide 12 page 2
 	assert(n < 0 && f < 0 && "Near and Far Plane need to be negative because expressed in camera coordinate system that is watching in the negative direction");

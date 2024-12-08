@@ -198,7 +198,7 @@ void load_scene(const std::string &filename,Program &program,UniformAttributes &
 
 			// Load mesh from a file
 			std::string filename_off = std::string(DATA_DIR) + entry["Path"].get<std::string>();
-			std::cout << filename_off << std::endl;
+			std::cout << "Location of the .off file : " << filename_off << std::endl;
 
 			MatrixXf vertices;                  
 			MatrixXi facets;
@@ -398,7 +398,7 @@ Matrix4f create_camera_matrix(Vector3f& eye,  Vector3f& target,  Vector3f& up) {
 	u = w.cross(up).normalized();             // x axis camera
 	v = u.cross(w);				  	      	  // y axis camera 
 
-	std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
+	//std::cout << "w : " << w.transpose() << "| u : " << u.transpose() << "| v : " << v.transpose() << std::endl;
 
 	Matrix3f R;
     R.col(0) << u.x(), u.y(), u.z();
@@ -487,7 +487,7 @@ Matrix4f perspective_matrix(float near , float focal_lenght, float theta,float a
 	b = - std::tan(theta / 2.0) * std::abs(n); 
 	l = b ;
 
-	std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
+	//std::cout << "PRO r = " << r << " | t = " << t << " | f = " << f << " | b = " << b << " | l = " << l << " | n = " << n << std::endl;
 
 	// slide 12 page 2
 	assert(n < 0 && f < 0 && "Near and Far Plane need to be negative because expressed in camera coordinate system that is watching in the negative direction");

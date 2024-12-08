@@ -19,4 +19,6 @@ Example of execution :
 
 ./run.sh ex2 f
 
-./run.sh ex2 v
+./run.sh ex3 v
+
+./run.sh ex4 w

@@ -1,4 +1,4 @@
-# Install script for directory: /home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024
+# Install script for directory: /home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "DEBUG")
+    set(CMAKE_INSTALL_CONFIG_NAME "RELEASE")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/xxx/Desktop/CG/2024/Assignment4/Assignment_4_Berruti_2024/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
