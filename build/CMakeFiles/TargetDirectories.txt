@@ -1,3 +1,0 @@
-/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/CMakeFiles/assignment4.dir
-/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/CMakeFiles/edit_cache.dir
-/home/xxx/Desktop/CG/2024/Assignment_4/Assignment_4_Berruti_2024/build/CMakeFiles/rebuild_cache.dir

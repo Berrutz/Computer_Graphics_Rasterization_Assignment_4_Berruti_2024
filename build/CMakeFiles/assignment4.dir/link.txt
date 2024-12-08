@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG -rdynamic CMakeFiles/assignment4.dir/src/ex4/ex4_main.cpp.o CMakeFiles/assignment4.dir/src/ex4/ex4_raster.cpp.o -o assignment4 
